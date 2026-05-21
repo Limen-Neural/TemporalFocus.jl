@@ -1,7 +1,7 @@
-using SpikeAttention
+using TemporalFocus
 using Test
 
-@testset "SpikeAttention" begin
+@testset "TemporalFocus" begin
     @testset "Discrete Attention" begin
         q = SpikeTrain([
             SpikeEvent(1, 0.10f0, 1.0f0),
