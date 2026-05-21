@@ -1,7 +1,7 @@
-using SpikenautAttention
+using SpikeAttention
 using Test
 
-@testset "SpikenautAttention" begin
+@testset "SpikeAttention" begin
     @testset "Discrete Attention" begin
         q = SpikeTrain([
             SpikeEvent(1, 0.10f0, 1.0f0),
