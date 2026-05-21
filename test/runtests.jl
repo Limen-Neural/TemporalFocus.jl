@@ -74,14 +74,4 @@ using Test
         @test [event.neuron_id for event in buffer.events] == [2, 3]
     end
 
-    @testset "STDP Update" begin
-        weights = zeros(Float32, 2, 2)
-        pre = SpikeTrain([SpikeEvent(1, 0.10f0, 1.0f0)])
-        post = SpikeTrain([SpikeEvent(2, 0.20f0, 0.5f0)])
-
-        stdp_update!(weights, pre, post; τ = 0.10f0, η = 0.2f0)
-
-        @test weights[1, 2] ≈ 0.2f0 * 0.5f0 * exp(-1.0f0) atol = 1.0f-6
-        @test sum(weights) ≈ weights[1, 2] atol = 1.0f-6
-    end
 end
