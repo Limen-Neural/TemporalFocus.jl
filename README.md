@@ -42,9 +42,18 @@ Outputs from this package should remain pure SNN quantities or direct neuron-spa
 - `spike_attention_discrete`
 - `spike_attention_temporal`
 - `spike_attention_continuous`
-- `stdp_update!`
+- `temporal_weight`
 - `normalize_l1!`
 - `normalize_max!`
+- `prune!`
+
+## Migration Note
+
+**STDP and plasticity removed in v0.1.0:**
+
+The `stdp_update!` function has been removed from this package. Synaptic plasticity, including STDP, Hebbian learning, reward-modulated plasticity, and eligibility traces, should be implemented in a dedicated plasticity package such as `plasticity-lab` or a future Julia plasticity adapter.
+
+TemporalFocus.jl focuses exclusively on spike-native temporal attention and does not own learning rules or weight updates.
 
 ## Non-Goals
 
