@@ -21,16 +21,6 @@ It does not own:
 
 If a feature requires knowledge of tokens, embeddings, dense attention semantics, or model-space projection weights, it belongs outside this repository.
 
-## Boundary
-
-The architectural split is:
-
-- `spikenaut-encoder`: converts external signals or model-side context into spike-compatible inputs
-- `spikenaut-spine`: transports pure SNN data across the process boundary
-- `SpikenautAttention.jl`: computes spike-native temporal interaction and local plasticity
-- `SpikenautLSM.jl`: reservoir dynamics and spike generation
-- `SpikenautExecution.jl`: event-loop ownership and runtime scheduling
-- Rust hybrid layers such as `spike-lmo` or `spikenaut-hybrid`: own LLM fusion, projector weights, and any return path back into model space
 
 ## Interface Contract
 
