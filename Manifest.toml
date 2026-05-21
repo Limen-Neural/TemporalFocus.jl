@@ -2,9 +2,9 @@
 
 julia_version = "1.12.6"
 manifest_format = "2.0"
-project_hash = "c62b7b1ecc37b86bcd43a6d5416323601d82ee9e"
+project_hash = "1f4947465cc8579d75265b2fc33a0bb6bd6f6aec"
 
-[[deps.SpikenautAttention]]
+[[deps.TemporalFocus]]
 path = "."
 uuid = "7f3c9f2a-6b2e-4d91-9c4f-1a2b3c4d5e6f"
 version = "0.1.0"
