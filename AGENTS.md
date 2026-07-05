@@ -47,6 +47,7 @@ julia --project=. -e 'using Pkg; Pkg.test()'
   - `temporal_weight` — exponential decay weighting
   - `prune!` — in-place buffer pruning
 - SPDX (Software Package Data Exchange) license header at the top of every source file: `# SPDX-License-Identifier: MIT OR Apache-2.0`
+- MIT (Massachusetts Institute of Technology) license — see `LICENSE-MIT`
 
 ## Testing
 
