@@ -1,5 +1,7 @@
 # TemporalFocus.jl
 
+[![License: MIT OR Apache-2.0](https://img.shields.io/badge/license-MIT%2FApache--2.0-blue.svg)](LICENSE-MIT)
+
 Pure spike-native temporal interaction primitives for the Spikenaut ecosystem.
 
 ## Scope
