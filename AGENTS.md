@@ -4,6 +4,11 @@
 
 TemporalFocus.jl is a pure spike-native temporal attention kernel for the Spikenaut ecosystem.
 
+For the authoritative repository boundary, see **README.md → Scope**:
+- https://github.com/Limen-Neural/TemporalFocus.jl#scope
+
+This document should not diverge from that scope definition.
+
 **Scope** — TemporalFocus owns:
 - Spike events, spike trains, and temporal buffers
 - Coincidence-based and temporally decayed spike interaction
@@ -46,14 +51,14 @@ julia --project=. -e 'using Pkg; Pkg.test()'
 - All new functions must have tests in `test/runtests.jl`
 - Test edge cases: empty trains, single neuron, out-of-range IDs, zero τ
 - Run `julia --project=. -e 'using Pkg; Pkg.test()'` before committing
-- CI runs on Julia 1.9, 1.10, 1.11 across ubuntu, macOS, windows
+- CI runs tests on `ubuntu-latest` with a Julia version matrix: 1.9, 1.10, 1.11
 
 ## PR instructions
 
 - Branch naming: `<type>/<description>` (e.g., `feat/continuous-attention`, `fix/buffer-pruning`)
 - Commit format: `<type>(<scope>): <description>` (e.g., `feat(attention): add continuous kernel`)
 - Resolve all review threads before merge
-- All CI checks must pass (Codacy, Kilo, Julia test matrix)
+- All CI checks must pass (Julia test matrix)
 
 ## Boundary enforcement
 
