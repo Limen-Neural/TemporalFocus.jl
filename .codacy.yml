@@ -4,6 +4,9 @@ exclude_paths:
   - ".mimocode/**"
   - ".codex/**"
   - "test/**"
+  # AGENTS.md is agent-facing instructions, not code — Codacy's AGENTS.md analyzer
+  # flags false positives (no persona, no tools section, no priority markers)
+  - "AGENTS.md"
 
 plugins:
   alex:
