@@ -14,7 +14,7 @@
 .DS_Store
 .vscode/
 .idea/
-.codex
+.codex/
 .mimocode/
 
 # Logs and scratch files

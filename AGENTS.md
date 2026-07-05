@@ -54,7 +54,7 @@ julia --project=. -e 'using Pkg; Pkg.test()'
 - All new public functions should have tests in `test/runtests.jl` (trivial internal helpers excepted)
 - Test edge cases: empty trains, single neuron, out-of-range IDs, zero τ
 - Run `julia --project=. -e 'using Pkg; Pkg.test()'` before committing
-- CI runs on Julia 1.9, 1.10, 1.11 across ubuntu, macOS, windows
+- CI runs on Julia 1.9, 1.10, 1.11 on ubuntu
 
 ## PR instructions
 
