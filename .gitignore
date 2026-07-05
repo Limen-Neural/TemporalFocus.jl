@@ -15,6 +15,7 @@
 .vscode/
 .idea/
 .codex
+.mimocode/
 
 # Logs and scratch files
 *.log
