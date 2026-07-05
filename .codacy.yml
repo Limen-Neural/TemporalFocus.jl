@@ -1,0 +1,21 @@
+---
+exclude_paths:
+  - "Manifest.toml"
+  - ".mimocode/**"
+  - ".codex/**"
+  - "test/**"
+
+plugins:
+  alex:
+    enabled: true
+  misspellings:
+    enabled: true
+  markdownlint:
+    enabled: true
+    config:
+      MD013:
+        enabled: false
+      MD033:
+        enabled: false
+      MD041:
+        enabled: false
