@@ -142,20 +142,32 @@ using Test
             @test out == Float32[6]
         end
 
-        @testset "Out of range neuron ID throws" begin
+        @testset "Out of range source neuron ID throws" begin
             q = SpikeTrain([SpikeEvent(5, 0.1f0, 1.0f0)])
             k = SpikeTrain([SpikeEvent(1, 0.2f0, 1.0f0)])
             v = Float32[1 0; 0 1]
             @test_throws ArgumentError spike_attention_discrete(q, k, v)
         end
 
-        @testset "Dimension mismatch throws" begin
+        @testset "Out of range context neuron ID is ignored" begin
+            q = SpikeTrain([SpikeEvent(1, 0.1f0, 1.0f0)])
+            k = SpikeTrain([SpikeEvent(5, 0.2f0, 1.0f0)])
+            v = Float32[1 0; 0 1]
+            out = spike_attention_discrete(q, k, v)
+            @test out == Float32[0, 0]
+        end
+
+        @testset "Larger readout matrix works" begin
             q = SpikeTrain([SpikeEvent(1, 0.1f0, 1.0f0)])
             k = SpikeTrain([SpikeEvent(1, 0.2f0, 1.0f0)])
             v = Float32[1 0 0; 0 1 0; 0 0 1]
             # readout has 3 rows but only 1 neuron → should work
             out = spike_attention_discrete(q, k, v)
             @test length(out) == 3
+        end
+
+        @testset "Dimension mismatch throws" begin
+            @test_throws DimensionMismatch TemporalFocus._apply_readout(Float32[1, 2], Float32[1 0 0; 0 1 0; 0 0 1])
         end
 
         @testset "No coincidences" begin
@@ -173,6 +185,15 @@ using Test
             k = SpikeTrain([SpikeEvent(1, 0.2f0, 1.0f0)])
             v = Float32[1; 2;;]
             @test_throws ArgumentError spike_attention_temporal(q, k, v; τ = 0.0f0)
+        end
+
+        @testset "tau zero not validated without coincidences" begin
+            # τ is only validated when temporal_weight is called (lazy validation)
+            q = SpikeTrain([SpikeEvent(1, 0.1f0, 1.0f0)])
+            k = SpikeTrain([SpikeEvent(2, 0.2f0, 1.0f0)])
+            v = Float32[1 0; 0 1]
+            out = spike_attention_temporal(q, k, v; τ = 0.0f0)
+            @test out == Float32[0, 0]
         end
 
         @testset "Negative tau throws" begin
