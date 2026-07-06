@@ -1,0 +1,24 @@
+---
+exclude_paths:
+  - "Manifest.toml"
+  - ".mimocode/**"
+  - ".codex/**"
+  - "test/**"
+  # AGENTS.md is agent-facing instructions, not code — Codacy's AGENTS.md analyzer
+  # flags false positives (no persona, no tools section, no priority markers)
+  - "AGENTS.md"
+
+plugins:
+  alex:
+    enabled: true
+  misspellings:
+    enabled: true
+  markdownlint:
+    enabled: true
+    config:
+      MD013:
+        enabled: false
+      MD033:
+        enabled: false
+      MD041:
+        enabled: false
