@@ -49,7 +49,6 @@ If a PR introduces features outside this scope, request scope clarification befo
 
 - Are inner loops `@inbounds` where safe?
 - Are there unnecessary allocations in hot paths?
-- Is the `_` prefix used for internal helpers to signal non-public API?
 
 ### Tests
 
