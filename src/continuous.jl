@@ -6,6 +6,8 @@ function spike_attention_continuous(
     readout::AbstractMatrix;
     τ::Real = 1.0f0,
 )
+    τ_f32 = Float32(τ)
+    τ_f32 > 0f0 || throw(ArgumentError("τ must be positive"))
     n = _check_positive_rows(readout)
     attention = zeros(Float32, n)
     window = min(source_buffer.window, context_buffer.window)

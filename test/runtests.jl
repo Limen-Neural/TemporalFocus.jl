@@ -187,13 +187,12 @@ using Test
             @test_throws ArgumentError spike_attention_temporal(q, k, v; τ = 0.0f0)
         end
 
-        @testset "tau zero not validated without coincidences" begin
-            # τ is only validated when temporal_weight is called (lazy validation)
+        @testset "tau zero throws even without coincidences" begin
+            # τ is validated eagerly before the loop
             q = SpikeTrain([SpikeEvent(1, 0.1f0, 1.0f0)])
             k = SpikeTrain([SpikeEvent(2, 0.2f0, 1.0f0)])
             v = Float32[1 0; 0 1]
-            out = spike_attention_temporal(q, k, v; τ = 0.0f0)
-            @test out == Float32[0, 0]
+            @test_throws ArgumentError spike_attention_temporal(q, k, v; τ = 0.0f0)
         end
 
         @testset "Negative tau throws" begin
