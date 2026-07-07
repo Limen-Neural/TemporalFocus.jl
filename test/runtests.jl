@@ -261,9 +261,10 @@ using Test
         end
 
         @testset "tau zero throws even without coincidences" begin
+            # Different neuron_ids → no coincidences, but τ is still validated eagerly
             bq = TemporalBuffer(0.001f0, [SpikeEvent(1, 0.5f0, 1.0f0)])
-            bk = TemporalBuffer(0.001f0, [SpikeEvent(1, 0.5f0, 1.0f0)])
-            v = Float32[1; 2;;]
+            bk = TemporalBuffer(0.001f0, [SpikeEvent(2, 0.5f0, 1.0f0)])
+            v = Float32[1 0; 0 1]
             @test_throws ArgumentError spike_attention_continuous(bq, bk, v; τ = 0.0f0)
         end
     end
