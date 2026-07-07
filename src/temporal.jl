@@ -22,7 +22,7 @@ function spike_attention_temporal(
         for context_event in context_spikes.events
             if source_id == context_event.neuron_id
                 attention[source_id] += source_event.value * context_event.value *
-                                        temporal_weight(source_event.t - context_event.t, τ)
+                                        temporal_weight(source_event.t - context_event.t, τ_f32)
             end
         end
     end
