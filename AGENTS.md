@@ -68,3 +68,7 @@ julia --project=. -e 'using Pkg; Pkg.test()'
 - If a PR introduces STDP, plasticity, or learning rules, it belongs in a dedicated plasticity package
 - If a PR touches tokenization, embeddings, or transformer logic, it belongs in a different repo
 - Reviewers should reject scope creep with a redirect to the appropriate package
+
+## Cursor Cloud specific instructions
+
+- Julia is provided via `juliaup` and the default channel is **1.12**, matching this repo's committed `Manifest.toml`. Run the standard dev commands from "Dev environment" above: `julia --project=. -e 'using Pkg; Pkg.instantiate()'` then `Pkg.test()` (50 tests).
