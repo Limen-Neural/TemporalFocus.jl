@@ -71,4 +71,4 @@ julia --project=. -e 'using Pkg; Pkg.test()'
 
 ## Cursor Cloud specific instructions
 
-- Julia is provided via `juliaup` and the default channel is **1.12**, matching this repo's committed `Manifest.toml`. Run the standard dev commands from "Dev environment" above: `julia --project=. -e 'using Pkg; Pkg.instantiate()'` then `Pkg.test()` (50 tests).
+- Julia is provided via `juliaup` and the default channel is **1.12**, matching this repo's committed `Manifest.toml`. Run the standard dev commands from "Dev environment" above: `julia --project=. -e 'using Pkg; Pkg.instantiate()'`, then `julia --project=. -e 'using Pkg; Pkg.test()'` (50 tests).
