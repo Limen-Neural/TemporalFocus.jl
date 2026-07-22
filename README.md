@@ -50,6 +50,26 @@ Outputs from this package should remain pure SNN quantities or direct neuron-spa
 - `normalize_max!`
 - `prune!`
 
+## Examples
+
+Runnable scripts live under [`examples/`](examples/). From the repo root:
+
+```bash
+julia --project=. examples/discrete_attention.jl
+julia --project=. examples/temporal_attention.jl
+julia --project=. examples/continuous_buffer.jl
+julia --project=. examples/normalize_readout.jl
+```
+
+| Script | Demonstrates |
+|--------|----------------|
+| `examples/discrete_attention.jl` | `SpikeTrain` + `spike_attention_discrete` coincidence attention |
+| `examples/temporal_attention.jl` | `spike_attention_temporal` with small vs large τ recency decay |
+| `examples/continuous_buffer.jl` | `TemporalBuffer`, `prune!`, and `spike_attention_continuous` |
+| `examples/normalize_readout.jl` | In-place `normalize_l1!` and `normalize_max!` on weight vectors |
+
+All examples use `Float32` spike values and require no extra dependencies.
+
 ## Migration Note
 
 **STDP and plasticity removed in v0.1.0:**
