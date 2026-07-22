@@ -2,6 +2,7 @@
 
 using TemporalFocus
 using Test
+using Random
 
 @testset "TemporalFocus" begin
     @testset "Discrete Attention" begin
@@ -338,6 +339,134 @@ using Test
         @testset "Monotonic decay" begin
             τ = 1.0f0
             @test temporal_weight(0.1f0, τ) > temporal_weight(0.5f0, τ) > temporal_weight(1.0f0, τ)
+        end
+    end
+
+    @testset "Property invariants" begin
+        rng = MersenneTwister(246)
+        N = 100
+        atol = 1.0f-5
+
+        @testset "normalize_l1! properties" begin
+            for _ in 1:N
+                n = rand(rng, 1:16)
+                # Mix of positive, negative, and zero entries
+                w = Float32.(randn(rng, n) .* 3)
+                if rand(rng) < 0.15
+                    fill!(w, 0.0f0)
+                end
+                original = copy(w)
+                total = sum(w)
+                normalize_l1!(w)
+                if total > 0
+                    # Near-cancellation of mixed signs can lose Float32 precision;
+                    # skip tight sum≈1 when |total| is tiny relative to the vector scale.
+                    scale = max(maximum(abs, original), eps(Float32))
+                    if abs(total) < 1.0f-3 * scale
+                        @test all(isfinite, w)
+                    else
+                        @test sum(w) ≈ 1.0f0 atol = atol
+                        # Proportionality preserved for non-zero total
+                        @test all(isapprox.(w .* total, original; atol = atol, rtol = 1.0f-4))
+                    end
+                else
+                    @test w == original
+                end
+            end
+        end
+
+        @testset "normalize_max! properties" begin
+            for _ in 1:N
+                n = rand(rng, 1:16)
+                w = Float32.(randn(rng, n) .* 3)
+                # Independent branches: ~15% zeros, ~15% all non-positive (disjoint).
+                r = rand(rng)
+                if r < 0.15
+                    fill!(w, 0.0f0)
+                elseif r < 0.30
+                    # All non-positive so peak <= 0
+                    w .= -abs.(w)
+                end
+                original = copy(w)
+                peak = maximum(w)
+                normalize_max!(w)
+                if peak > 0
+                    @test maximum(w) ≈ 1.0f0 atol = atol
+                    @test all(isapprox.(w .* peak, original; atol = atol, rtol = 1.0f-4))
+                else
+                    @test w == original
+                end
+            end
+        end
+
+        @testset "temporal_weight properties" begin
+            for _ in 1:N
+                τ = Float32(rand(rng) * 4 + 1.0f-3)  # positive
+                dt = Float32(randn(rng) * 5)
+
+                # Symmetry in dt
+                @test temporal_weight(dt, τ) ≈ temporal_weight(-dt, τ) atol = atol
+
+                # Closed-form formula
+                expected = exp(-abs(dt) / τ)
+                @test temporal_weight(dt, τ) ≈ expected atol = atol
+
+                # Zero lag is unity
+                @test temporal_weight(0.0f0, τ) ≈ 1.0f0 atol = atol
+            end
+
+            # τ <= 0 throws
+            for _ in 1:N
+                dt = Float32(randn(rng))
+                bad_τ = rand(rng) < 0.5 ? 0.0f0 : -Float32(rand(rng) * 5 + eps(Float32))
+                @test_throws ArgumentError temporal_weight(dt, bad_τ)
+            end
+        end
+
+        @testset "prune! properties" begin
+            for _ in 1:N
+                window = Float32(rand(rng) * 2 + 0.05f0)
+                current_time = Float32(rand(rng) * 10)
+                n_events = rand(rng, 0:24)
+                events = SpikeEvent[
+                    SpikeEvent(
+                        rand(rng, 1:8),
+                        Float32(current_time + (rand(rng) * 4 - 2) * window),
+                        Float32(rand(rng) * 2 - 0.5),
+                    )
+                    for _ in 1:n_events
+                ]
+                buffer = TemporalBuffer(window, events)
+                before_len = length(buffer.events)
+
+                prune!(buffer, current_time)
+
+                # Survivors are within the window
+                for event in buffer.events
+                    @test (current_time - event.t) <= window + atol
+                end
+
+                # Length is nonincreasing
+                @test length(buffer.events) <= before_len
+
+                # Every survivor was in the original set (identity by fields)
+                survivor_set = Set((e.neuron_id, e.t, e.value) for e in buffer.events)
+                original_set = Set((e.neuron_id, e.t, e.value) for e in events)
+                @test survivor_set ⊆ original_set
+
+                # Dropped events are outside the window
+                for e in events
+                    key = (e.neuron_id, e.t, e.value)
+                    if key ∉ survivor_set
+                        @test (current_time - e.t) > window
+                    end
+                end
+
+                # Idempotent: second prune leaves events unchanged
+                after_first = copy(buffer.events)
+                prune!(buffer, current_time)
+                @test buffer.events == after_first
+            end
         end
     end
 
