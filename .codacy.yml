@@ -20,7 +20,7 @@ plugins:
         enabled: false
       # Keep a Changelog repeats ### Added / ### Changed under each version
       MD024:
-        siblings_only: true
+        enabled: false
       MD033:
         enabled: false
       MD041:
