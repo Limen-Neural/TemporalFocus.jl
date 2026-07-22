@@ -11,7 +11,9 @@ source_buf = TemporalBuffer(window, [
 ])
 context_buf = TemporalBuffer(window, [
     SpikeEvent(1, 0.35f0, 1.0f0),  # within |dt| of source at t=0.50
-    SpikeEvent(1, 0.90f0, 1.0f0),  # outside continuous interaction window
+    # Future-relative to current_time=0.50: prune! keeps it (age is negative),
+    # but continuous attention still filters it out via |dt| > window.
+    SpikeEvent(1, 0.90f0, 1.0f0),
     SpikeEvent(2, 0.05f0, 1.0f0),
 ])
 
@@ -19,6 +21,8 @@ println("Before prune! — source events: ", length(source_buf.events),
         ", context events: ", length(context_buf.events))
 
 # Drop events older than `window` relative to current_time.
+# Note: prune! does not remove future-relative events (t > current_time);
+# continuous attention later filters by |dt| against the buffer window.
 current_time = 0.50f0
 prune!(source_buf, current_time)
 prune!(context_buf, current_time)
