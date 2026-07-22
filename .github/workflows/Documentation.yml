@@ -5,14 +5,38 @@ on:
     branches: [main]
     tags: ['*']
   pull_request:
-    branches: [main]
 
 jobs:
+  # PR and push: build docs only (no deploy credentials).
   build:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - name: Set up Julia
+        uses: julia-actions/setup-julia@4c0cb0fce8556fdb04a90347310e5db8b1f98fb9 # v2
+        with:
+          version: "1.10"
+
+      - name: Cache Julia packages
+        uses: julia-actions/cache@d10a6fd8f31b12404a54613ebad242900567f2b9 # v2
+
+      - name: Install dependencies
+        run: julia --project=docs -e 'using Pkg; Pkg.develop(path="."); Pkg.instantiate()'
+
+      - name: Build documentation
+        env:
+          DOCUMENTER_BUILD_ONLY: "true"
+        run: julia --project=docs docs/make.jl
+
+  # Push/tags only: rebuild and deploy with credentials (not available on PRs).
+  deploy:
+    if: github.event_name != 'pull_request'
     permissions:
       contents: write
       statuses: write
-      pull-requests: read
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
