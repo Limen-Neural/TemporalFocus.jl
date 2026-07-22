@@ -4,6 +4,7 @@
 
 ### Added
 
+- `Base.isempty` for `SpikeTrain` and `TemporalBuffer`.
 - Julia docstrings for all public exports (module, types, attention kernels, normalization).
 
 ### Changed
