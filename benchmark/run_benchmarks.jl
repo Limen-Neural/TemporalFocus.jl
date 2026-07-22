@@ -79,10 +79,12 @@ function _make_suite()
         stale = _make_events(n_events ÷ 2, N_NEURONS; t_max = 0.10f0)
         fresh = _make_events(n_events - length(stale), N_NEURONS; t_max = T_MAX)
         prune_events = vcat(stale, fresh)
-        # Setup rebuilds the buffer each sample so prune! always has the same input.
+        # Setup rebuilds the buffer each eval so prune! always has the same input
+        # (evals=1 forces setup per evaluation; prune! mutates buf.events).
         suite["prune"][string(scale_name)] = @benchmarkable(
             prune!(buf, $T_MAX),
-            setup = (buf = TemporalBuffer($WINDOW, copy($prune_events)))
+            setup = (buf = TemporalBuffer($WINDOW, copy($prune_events))),
+            evals = 1,
         )
     end
 
