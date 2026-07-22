@@ -116,3 +116,4 @@ Base.hash(a::SpikeTrain, h::UInt) = hash(a.events, h)
 Base.:(==)(a::TemporalBuffer, b::TemporalBuffer) =
     a.window == b.window && a.events == b.events
 
+Base.hash(a::TemporalBuffer, h::UInt) = hash(a.events, hash(a.window, h))
