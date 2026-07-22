@@ -373,6 +373,35 @@ using Random
         @test occursin("1 event)", sprint(show, TemporalBuffer(0.25f0, [SpikeEvent(1, 0.1f0)])))
     end
 
+
+    @testset "Base.==" begin
+        @testset "SpikeEvent" begin
+            a = SpikeEvent(1, 0.5f0, 1.0f0)
+            @test a == SpikeEvent(1, 0.5f0, 1.0f0)
+            @test a != SpikeEvent(2, 0.5f0, 1.0f0)
+            @test a != SpikeEvent(1, 0.6f0, 1.0f0)
+            @test a != SpikeEvent(1, 0.5f0, 2.0f0)
+        end
+        @testset "SpikeTrain" begin
+            e1 = SpikeEvent(1, 0.1f0, 1.0f0)
+            e2 = SpikeEvent(2, 0.2f0, 1.0f0)
+            @test SpikeTrain() == SpikeTrain(SpikeEvent[])
+            @test SpikeTrain([e1, e2]) == SpikeTrain([e1, e2])
+            @test SpikeTrain([e1, e2]) != SpikeTrain([e2, e1])
+            @test SpikeTrain([e1]) != SpikeTrain()
+            @test hash(SpikeTrain([e1, e2])) == hash(SpikeTrain([e1, e2]))
+            @test length(Set([SpikeTrain([e1]), SpikeTrain([e1])])) == 1
+        end
+        @testset "TemporalBuffer" begin
+            e = SpikeEvent(1, 0.1f0, 1.0f0)
+            @test TemporalBuffer(1.0f0) == TemporalBuffer(1.0f0, SpikeEvent[])
+            @test TemporalBuffer(1.0f0, [e]) == TemporalBuffer(1.0f0, [e])
+            @test TemporalBuffer(1.0f0, [e]) != TemporalBuffer(2.0f0, [e])
+            @test TemporalBuffer(1.0f0, [e]) != TemporalBuffer(1.0f0)
+            @test hash(TemporalBuffer(1.0f0, [e])) == hash(TemporalBuffer(1.0f0, [e]))
+        end
+    end
+
     @testset "Property invariants" begin
         rng = MersenneTwister(246)
         N = 100

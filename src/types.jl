@@ -103,3 +103,15 @@ function Base.show(io::IO, buffer::TemporalBuffer)
     n = length(buffer.events)
     print(io, "TemporalBuffer(window=", buffer.window, ", ", n, n == 1 ? " event)" : " events)")
 end
+
+Base.:(==)(a::SpikeEvent, b::SpikeEvent) =
+    a.neuron_id == b.neuron_id && a.t == b.t && a.value == b.value
+
+Base.:(==)(a::SpikeTrain, b::SpikeTrain) = a.events == b.events
+
+Base.:(==)(a::TemporalBuffer, b::TemporalBuffer) =
+    a.window == b.window && a.events == b.events
+
+Base.hash(a::SpikeEvent, h::UInt) = hash(a.value, hash(a.t, hash(a.neuron_id, h)))
+Base.hash(a::SpikeTrain, h::UInt) = hash(a.events, h)
+Base.hash(a::TemporalBuffer, h::UInt) = hash(a.events, hash(a.window, h))
