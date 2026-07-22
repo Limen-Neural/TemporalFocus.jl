@@ -12,7 +12,3 @@ jobs:
       - uses: JuliaRegistries/TagBot@14d7645453716d7a2f09b1da0504a024f97462a1 # v1.25.10
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          # Optional: SSH deploy key so tags that touch workflow files (or docs
-          # deploys) can trigger other Actions. Add DOCUMENTER_KEY if needed.
-          # See: https://github.com/JuliaRegistries/TagBot#ssh-deploy-keys
-          ssh: ${{ secrets.DOCUMENTER_KEY }}
