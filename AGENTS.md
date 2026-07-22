@@ -34,6 +34,10 @@ julia --project=. -e 'using Pkg; Pkg.instantiate()'
 
 # Run tests
 julia --project=. -e 'using Pkg; Pkg.test()'
+
+# Build documentation (Documenter.jl; not a root dependency)
+julia --project=docs -e 'using Pkg; Pkg.develop(path="."); Pkg.instantiate()'
+julia --project=docs docs/make.jl
 ```
 
 ## Code style
