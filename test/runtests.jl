@@ -342,6 +342,14 @@ using Random
         end
     end
 
+
+    @testset "Base.isempty" begin
+        @test isempty(SpikeTrain())
+        @test !isempty(SpikeTrain([SpikeEvent(1, 0.1f0, 1.0f0)]))
+        @test isempty(TemporalBuffer(1.0f0))
+        @test !isempty(TemporalBuffer(1.0f0, [SpikeEvent(1, 0.1f0, 1.0f0)]))
+    end
+
     @testset "Property invariants" begin
         rng = MersenneTwister(246)
         N = 100
