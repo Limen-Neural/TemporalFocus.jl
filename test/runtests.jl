@@ -528,6 +528,16 @@ using Random
                 @test buffer.events == after_first
             end
         end
+        @testset "hash matches ==" begin
+            e1 = SpikeEvent(1, 0.1f0, 1.0f0)
+            e2 = SpikeEvent(2, 0.2f0, 1.0f0)
+            a = SpikeTrain([e1, e2])
+            b = SpikeTrain([e1, e2])
+            @test hash(a) == hash(b)
+            @test length(Set([a, b])) == 1
+            @test hash(SpikeEvent(1, 0.5f0, 1.0f0)) == hash(SpikeEvent(1, 0.5f0, 1.0f0))
+            @test hash(TemporalBuffer(1.0f0, [e1])) == hash(TemporalBuffer(1.0f0, [e1]))
+        end
     end
 
 end

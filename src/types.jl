@@ -107,11 +107,12 @@ end
 Base.:(==)(a::SpikeEvent, b::SpikeEvent) =
     a.neuron_id == b.neuron_id && a.t == b.t && a.value == b.value
 
+Base.hash(a::SpikeEvent, h::UInt) = hash(a.value, hash(a.t, hash(a.neuron_id, h)))
+
 Base.:(==)(a::SpikeTrain, b::SpikeTrain) = a.events == b.events
+
+Base.hash(a::SpikeTrain, h::UInt) = hash(a.events, h)
 
 Base.:(==)(a::TemporalBuffer, b::TemporalBuffer) =
     a.window == b.window && a.events == b.events
 
-Base.hash(a::SpikeEvent, h::UInt) = hash(a.value, hash(a.t, hash(a.neuron_id, h)))
-Base.hash(a::SpikeTrain, h::UInt) = hash(a.events, h)
-Base.hash(a::TemporalBuffer, h::UInt) = hash(a.events, hash(a.window, h))
