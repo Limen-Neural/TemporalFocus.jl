@@ -89,3 +89,24 @@ This repository should not accumulate adapter code for:
 - fusion gates
 - cross-modal projector training
 - hybrid orchestration
+
+## Benchmarks
+
+Local performance microbenchmarks live under `benchmark/` and use
+[BenchmarkTools.jl](https://github.com/JuliaCI/BenchmarkTools.jl). They are
+**not** a package dependency and are **not** wired into CI or `Pkg.test()`.
+
+```bash
+julia --project=benchmark -e 'using Pkg; Pkg.develop(path="."); Pkg.instantiate()'
+julia --project=benchmark benchmark/run_benchmarks.jl
+```
+
+The suite covers:
+
+- `spike_attention_discrete` / `spike_attention_temporal` / `spike_attention_continuous` at small (64) and medium (500) event counts
+- `normalize_l1!` / `normalize_max!`
+- `prune!`
+- optional `temporal_weight` microbenchmark
+
+Event counts are capped to avoid O(n²) blowup in pairwise attention. Output
+reports median time and allocations per case.
