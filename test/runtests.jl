@@ -340,6 +340,15 @@ using Random
             τ = 1.0f0
             @test temporal_weight(0.1f0, τ) > temporal_weight(0.5f0, τ) > temporal_weight(1.0f0, τ)
         end
+
+        @testset "Unchecked matches public when τ > 0" begin
+            @test TemporalFocus._temporal_weight_unchecked(0.3f0, 0.5f0) ≈ temporal_weight(0.3f0, 0.5f0)
+        end
+
+        @testset "Public still validates τ" begin
+            @test_throws ArgumentError temporal_weight(0.1f0, 0.0f0)
+            @test_throws ArgumentError temporal_weight(0.1f0, -1.0f0)
+        end
     end
 
     @testset "Property invariants" begin
