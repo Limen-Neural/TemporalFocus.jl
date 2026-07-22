@@ -342,6 +342,20 @@ using Random
         end
     end
 
+
+    @testset "Base.show" begin
+        e = SpikeEvent(2, 0.5f0, 1.25f0)
+        s = sprint(show, e)
+        @test occursin("neuron_id=2", s)
+        @test occursin("value=", s)
+        @test sprint(show, SpikeTrain()) == "SpikeTrain(0 events)"
+        @test sprint(show, SpikeTrain([SpikeEvent(1, 0.1f0)])) == "SpikeTrain(1 event)"
+        @test sprint(show, SpikeTrain([SpikeEvent(1, 0.1f0), SpikeEvent(2, 0.2f0)])) == "SpikeTrain(2 events)"
+        @test occursin("TemporalBuffer(window=", sprint(show, TemporalBuffer(0.25f0)))
+        @test occursin("0 events)", sprint(show, TemporalBuffer(0.25f0)))
+        @test occursin("1 event)", sprint(show, TemporalBuffer(0.25f0, [SpikeEvent(1, 0.1f0)])))
+    end
+
     @testset "Property invariants" begin
         rng = MersenneTwister(246)
         N = 100
