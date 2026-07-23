@@ -33,11 +33,18 @@ primitives for the Spikenaut ecosystem.
   - `spike_attention_continuous`
 - Normalization: `normalize_l1!`, `normalize_max!`
 - Dual licensing: MIT OR Apache-2.0
+- Agent and review guidance: `AGENTS.md`, `REVIEW.md`
 
-### Notes
+### Changed
 
-- Scope is intentionally narrow: spike events, coincidence / temporally decayed
-  interaction, attention kernels, normalization, and readout application.
-- STDP, Hebbian learning, reward-modulated plasticity, eligibility traces,
-  tokenization, embeddings, and transformer attention are **out of scope** and
-  belong in dedicated packages (see README Migration Note).
+- Project focused as TemporalFocus.jl (spike-native temporal attention kernel)
+- CI test matrix on Ubuntu for Julia 1.9–1.12
+- Package scope narrowed to spike events, coincidence / temporally decayed
+  interaction, attention kernels, normalization, and readout application
+
+### Removed
+
+- `stdp_update!` and all STDP / synaptic-plasticity learning rules from this
+  package (see README Migration Note; plasticity belongs in a dedicated package)
+- Tokenization, embeddings, transformer attention, and related non-spike
+  attention surface area from package scope
