@@ -4,8 +4,10 @@
 # Line length — docs and changelogs wrap naturally
 MD013: false
 
-# Keep a Changelog repeats ### Added / ### Changed under each version section
-MD024: false
+# Keep a Changelog repeats ### Added / ### Changed under each version section.
+# Allow same heading text under different parents; still flag duplicates as siblings.
+MD024:
+  siblings_only: true
 
 # Inline HTML occasionally used in docs
 MD033: false

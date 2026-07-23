@@ -18,9 +18,10 @@ plugins:
     config:
       MD013:
         enabled: false
-      # Keep a Changelog repeats ### Added / ### Changed under each version
+      # Keep a Changelog repeats ### Added / ### Changed under each version.
+      # siblings_only: allow across parents; still flag same-section duplicates.
       MD024:
-        enabled: false
+        siblings_only: true
       MD033:
         enabled: false
       MD041:
