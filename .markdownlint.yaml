@@ -1,0 +1,16 @@
+# markdownlint config (used by Codacy when tool config files are enabled)
+# https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md
+
+# Line length — docs and changelogs wrap naturally
+MD013: false
+
+# Keep a Changelog repeats ### Added / ### Changed under each version section.
+# Allow same heading text under different parents; still flag duplicates as siblings.
+MD024:
+  siblings_only: true
+
+# Inline HTML occasionally used in docs
+MD033: false
+
+# First line heading — some docs start with prose
+MD041: false
