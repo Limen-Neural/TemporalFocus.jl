@@ -5,8 +5,7 @@
 MD013: false
 
 # Keep a Changelog repeats ### Added / ### Changed under each version section
-MD024:
-  siblings_only: true
+MD024: false
 
 # Inline HTML occasionally used in docs
 MD033: false
