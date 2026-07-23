@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## [Unreleased]
 
 ### Added
 
@@ -48,3 +48,6 @@ primitives for the Spikenaut ecosystem.
   package (see README Migration Note; plasticity belongs in a dedicated package)
 - Tokenization, embeddings, transformer attention, and related non-spike
   attention surface area from package scope
+
+[Unreleased]: https://github.com/Limen-Neural/TemporalFocus.jl/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/Limen-Neural/TemporalFocus.jl/releases/tag/v0.1.0

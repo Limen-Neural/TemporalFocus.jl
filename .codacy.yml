@@ -8,7 +8,9 @@ exclude_paths:
   # flags false positives (no persona, no tools section, no priority markers)
   - "AGENTS.md"
 
-plugins:
+# Codacy tool settings use the top-level `engines` key (not `plugins`).
+# See https://docs.codacy.com/repositories-configure/codacy-configuration-file/
+engines:
   alex:
     enabled: true
   misspellings:
