@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `Base.isempty` for `SpikeTrain` and `TemporalBuffer`.
 - Julia docstrings for all public exports (module, types, attention kernels, normalization).
 - Runnable usage examples under `examples/`.
 - Random-based property tests for normalize, temporal_weight, and prune!.
