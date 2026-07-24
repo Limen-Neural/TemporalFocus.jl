@@ -4,6 +4,12 @@ on:
     types:
       - created
   workflow_dispatch:
+# Explicit token scopes so TagBot can create tags/releases even when the
+# org/repo default GITHUB_TOKEN is read-only.
+permissions:
+  contents: write
+  issues: read
+  pull-requests: read
 jobs:
   TagBot:
     if: github.event_name == 'workflow_dispatch' || github.actor == 'JuliaTagBot'

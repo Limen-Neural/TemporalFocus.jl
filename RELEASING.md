@@ -10,7 +10,8 @@ This document covers first registration in the [General](https://github.com/Juli
 - [ ] `Project.toml` `version` matches the intended release (currently `0.1.0`)
 - [ ] `CHANGELOG.md` has a dated section for that version (see also #24 / related changelog PRs)
 - [ ] Top-level `LICENSE` exists (dual MIT OR Apache-2.0); `LICENSE-MIT` and `LICENSE-APACHE` remain the canonical full texts
-- [ ] TagBot workflow is present (`.github/workflows/TagBot.yml`)
+- [ ] TagBot workflow is present (`.github/workflows/TagBot.yml`) with `permissions: contents: write` (and at least read on issues/PRs) so TagBot can create tags/releases even if the org default `GITHUB_TOKEN` is read-only
+- [ ] Repo/org **Actions → General → Workflow permissions** allow creating and approving pull requests / read and write (or use TagBot’s documented PAT fallback) so first registration does not stall after General AutoMerge
 - [ ] Optional but recommended for versioned docs: repository secret `DOCUMENTER_KEY` (SSH deploy key) so TagBot tag pushes can trigger the Documentation workflow
 
 ### UUID hygiene (first registration only)
@@ -61,7 +62,7 @@ uuid4()
 
 1. Bump `version` in `Project.toml` (semver).
 2. Update `CHANGELOG.md` (move Unreleased notes under the new version heading with a date).
-3. Merge to `main` (prefer a commit that does not only change workflow files if you rely on automatic TagBot tagging).
+3. Merge to `main` (prefer a release commit that does not add or change `.github/workflows/*` if you rely on automatic TagBot tagging).
 4. Comment `@JuliaRegistrator register` on the release commit (issue comment or commit comment on the default branch).
 5. Wait for General AutoMerge; TagBot creates the tag.
 
