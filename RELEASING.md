@@ -11,6 +11,7 @@ This document covers first registration in the [General](https://github.com/Juli
 - [ ] `CHANGELOG.md` has a dated section for that version (see also #24 / related changelog PRs)
 - [ ] Top-level `LICENSE` exists (dual MIT OR Apache-2.0); `LICENSE-MIT` and `LICENSE-APACHE` remain the canonical full texts
 - [ ] TagBot workflow is present (`.github/workflows/TagBot.yml`)
+- [ ] Optional but recommended for versioned docs: repository secret `DOCUMENTER_KEY` (SSH deploy key) so TagBot tag pushes can trigger the Documentation workflow
 
 ### UUID hygiene (first registration only)
 
@@ -33,7 +34,7 @@ uuid4()
 
 1. **Freeze `main`** — merge all release-prep and changelog work; ensure `Project.toml` version is `0.1.0` and CI is green.
 2. **Do not pre-create a git tag** (e.g. `v0.1.0`). With TagBot enabled, pre-tagging races or confuses automated tagging after registration.
-3. On the **default branch commit** you want to register (or a GitHub release comment on that commit’s tree), comment:
+3. On a **commit on the default branch** you want to register, open an **issue comment** or a **commit comment** and write:
 
    ```text
    @JuliaRegistrator register
@@ -49,15 +50,19 @@ uuid4()
    First public release of TemporalFocus.jl.
    ```
 
-4. **Wait for General** — Registrator opens a PR against [JuliaRegistries/General](https://github.com/JuliaRegistries/General). AutoMerge runs checks; maintainers may comment. Do not force-merge unless you know what you are doing.
-5. **TagBot tags** — after the General PR merges, [JuliaTagBot](https://github.com/JuliaTagBot) comments on the registration issue/PR and the TagBot workflow creates the `vX.Y.Z` git tag and GitHub release. You can also run the TagBot workflow manually via `workflow_dispatch` if needed.
+   Registrator only accepts those comment locations (issue comment or commit comment). Do **not** put the trigger only on a GitHub Release body — that does not open a General PR.
+
+4. **Workflow-file / TagBot caveat** — if the *registration target commit* itself adds or changes `.github/workflows/*.yml` (including this prep PR’s TagBot file), GitHub blocks `GITHUB_TOKEN` from creating tags/releases for that commit ([TagBot: commits that modify workflow files](https://github.com/JuliaRegistries/TagBot#commits-that-modify-workflow-files)). Prefer registering a **later** default-branch commit that does not touch workflows, or use TagBot’s documented PAT / manual tag workaround. Still do not pre-tag from the prep PR.
+
+5. **Wait for General** — Registrator opens a PR against [JuliaRegistries/General](https://github.com/JuliaRegistries/General). AutoMerge runs checks; maintainers may comment. Do not force-merge unless you know what you are doing.
+6. **TagBot tags** — after the General PR merges, [JuliaTagBot](https://github.com/JuliaTagBot) comments on the registration issue/PR and the TagBot workflow creates the `vX.Y.Z` git tag and GitHub release. You can also run the TagBot workflow manually via `workflow_dispatch` if needed. With `DOCUMENTER_KEY` configured, tag pushes can deploy stable docs via the Documentation workflow.
 
 ## Subsequent releases
 
 1. Bump `version` in `Project.toml` (semver).
 2. Update `CHANGELOG.md` (move Unreleased notes under the new version heading with a date).
-3. Merge to `main`.
-4. Comment `@JuliaRegistrator register` on the release commit (or the PR that landed it, after merge — Registrator uses the default branch).
+3. Merge to `main` (prefer a commit that does not only change workflow files if you rely on automatic TagBot tagging).
+4. Comment `@JuliaRegistrator register` on the release commit (issue comment or commit comment on the default branch).
 5. Wait for General AutoMerge; TagBot creates the tag.
 
 ## Explicit non-goals of release-prep PRs
