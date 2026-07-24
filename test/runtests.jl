@@ -381,12 +381,20 @@ using Random
             @test a != SpikeEvent(2, 0.5f0, 1.0f0)
             @test a != SpikeEvent(1, 0.6f0, 1.0f0)
             @test a != SpikeEvent(1, 0.5f0, 2.0f0)
-            # ±0.0f0: == is true and hash must match for Set/Dict
+            # ±0.0f0: Float32 `==` collapses signs; `isequal`/`Set` keep Julia float rules
             zpos = SpikeEvent(1, 0.0f0, 0.0f0)
             zneg = SpikeEvent(1, -0.0f0, -0.0f0)
             @test zpos == zneg
-            @test hash(zpos) == hash(zneg)
-            @test length(Set([zpos, zneg])) == 1
+            @test !isequal(zpos, zneg)
+            @test hash(zpos) != hash(zneg)
+            @test length(Set([zpos, zneg])) == 2
+            # NaN: `==` is false; `isequal`/`Set` treat matching NaN spikes as one key
+            nan1 = SpikeEvent(1, NaN32, 1.0f0)
+            nan2 = SpikeEvent(1, NaN32, 1.0f0)
+            @test nan1 != nan2
+            @test isequal(nan1, nan2)
+            @test hash(nan1) == hash(nan2)
+            @test length(Set([nan1, nan2])) == 1
         end
         @testset "SpikeTrain" begin
             e1 = SpikeEvent(1, 0.1f0, 1.0f0)
@@ -397,6 +405,11 @@ using Random
             @test SpikeTrain([e1]) != SpikeTrain()
             @test hash(SpikeTrain([e1, e2])) == hash(SpikeTrain([e1, e2]))
             @test length(Set([SpikeTrain([e1]), SpikeTrain([e1])])) == 1
+            tnan1 = SpikeTrain([SpikeEvent(1, NaN32, 1.0f0)])
+            tnan2 = SpikeTrain([SpikeEvent(1, NaN32, 1.0f0)])
+            @test tnan1 != tnan2
+            @test isequal(tnan1, tnan2)
+            @test length(Set([tnan1, tnan2])) == 1
         end
         @testset "TemporalBuffer" begin
             e = SpikeEvent(1, 0.1f0, 1.0f0)
@@ -408,8 +421,9 @@ using Random
             bpos = TemporalBuffer(0.0f0)
             bneg = TemporalBuffer(-0.0f0)
             @test bpos == bneg
-            @test hash(bpos) == hash(bneg)
-            @test length(Set([bpos, bneg])) == 1
+            @test !isequal(bpos, bneg)
+            @test hash(bpos) != hash(bneg)
+            @test length(Set([bpos, bneg])) == 2
         end
     end
 

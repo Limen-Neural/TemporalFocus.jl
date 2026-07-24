@@ -109,21 +109,28 @@ function Base.show(io::IO, buffer::TemporalBuffer)
     print(io, "TemporalBuffer(window=", buffer.window, ", ", n, n == 1 ? " event)" : " events)")
 end
 
-# `==` treats ±0.0f0 as equal; hash must match. Canonicalize signed zeros.
-@inline _hash_f32(x::Float32, h::UInt) = hash(iszero(x) ? zero(Float32) : x, h)
-
+# `==` uses Float32 `==` (±0.0 equal, NaNs not equal).
+# `isequal`/`hash` follow Julia float rules (±0.0 distinct, NaNs equal) for Set/Dict.
 Base.:(==)(a::SpikeEvent, b::SpikeEvent) =
     a.neuron_id == b.neuron_id && a.t == b.t && a.value == b.value
 
+Base.isequal(a::SpikeEvent, b::SpikeEvent) =
+    a.neuron_id == b.neuron_id && isequal(a.t, b.t) && isequal(a.value, b.value)
+
 Base.hash(a::SpikeEvent, h::UInt) =
-    _hash_f32(a.value, _hash_f32(a.t, hash(a.neuron_id, h)))
+    hash(a.value, hash(a.t, hash(a.neuron_id, h)))
 
 Base.:(==)(a::SpikeTrain, b::SpikeTrain) = a.events == b.events
+
+Base.isequal(a::SpikeTrain, b::SpikeTrain) = isequal(a.events, b.events)
 
 Base.hash(a::SpikeTrain, h::UInt) = hash(a.events, h)
 
 Base.:(==)(a::TemporalBuffer, b::TemporalBuffer) =
     a.window == b.window && a.events == b.events
 
+Base.isequal(a::TemporalBuffer, b::TemporalBuffer) =
+    isequal(a.window, b.window) && isequal(a.events, b.events)
+
 Base.hash(a::TemporalBuffer, h::UInt) =
-    hash(a.events, _hash_f32(a.window, h))
+    hash(a.events, hash(a.window, h))
