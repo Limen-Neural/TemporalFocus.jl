@@ -89,13 +89,20 @@ function _make_suite()
     end
 
     # Normalization scales with vector length (not event count).
+    # evals=1 so setup re-copies raw input each timed evaluation (normalize_*! mutates x).
     for (scale_name, n) in ((:small, 64), (:medium, 500), (:large, 10_000))
         Random.seed!(RNG_SEED)
         w = rand(Float32, n)
-        suite["normalize"]["l1"][string(scale_name)] =
-            @benchmarkable(normalize_l1!(x), setup = (x = copy($w)))
-        suite["normalize"]["max"][string(scale_name)] =
-            @benchmarkable(normalize_max!(x), setup = (x = copy($w)))
+        suite["normalize"]["l1"][string(scale_name)] = @benchmarkable(
+            normalize_l1!(x),
+            setup = (x = copy($w)),
+            evals = 1,
+        )
+        suite["normalize"]["max"][string(scale_name)] = @benchmarkable(
+            normalize_max!(x),
+            setup = (x = copy($w)),
+            evals = 1,
+        )
     end
 
     # Optional micro-benchmark for the decay kernel.
