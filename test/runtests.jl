@@ -381,6 +381,12 @@ using Random
             @test a != SpikeEvent(2, 0.5f0, 1.0f0)
             @test a != SpikeEvent(1, 0.6f0, 1.0f0)
             @test a != SpikeEvent(1, 0.5f0, 2.0f0)
+            # ±0.0f0: == is true and hash must match for Set/Dict
+            zpos = SpikeEvent(1, 0.0f0, 0.0f0)
+            zneg = SpikeEvent(1, -0.0f0, -0.0f0)
+            @test zpos == zneg
+            @test hash(zpos) == hash(zneg)
+            @test length(Set([zpos, zneg])) == 1
         end
         @testset "SpikeTrain" begin
             e1 = SpikeEvent(1, 0.1f0, 1.0f0)
@@ -399,6 +405,11 @@ using Random
             @test TemporalBuffer(1.0f0, [e]) != TemporalBuffer(2.0f0, [e])
             @test TemporalBuffer(1.0f0, [e]) != TemporalBuffer(1.0f0)
             @test hash(TemporalBuffer(1.0f0, [e])) == hash(TemporalBuffer(1.0f0, [e]))
+            bpos = TemporalBuffer(0.0f0)
+            bneg = TemporalBuffer(-0.0f0)
+            @test bpos == bneg
+            @test hash(bpos) == hash(bneg)
+            @test length(Set([bpos, bneg])) == 1
         end
     end
 
