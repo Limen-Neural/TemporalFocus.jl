@@ -27,7 +27,12 @@ SpikeEvent(neuron_id::Integer, t::Real, value::Real = 1.0f0) =
 """
     SpikeTrain(events=SpikeEvent[])
 
-An unordered collection of [`SpikeEvent`](@ref)s.
+A collection of [`SpikeEvent`](@ref)s stored in vector order.
+
+Attention kernels treat trains as bags of events (order does not affect
+scores), but `==` / `hash` compare the underlying `events` vector
+element-wise, so order is part of equality. Callers that need order-invariant
+identity should normalize event order (or use a multiset) themselves.
 
 # Arguments
 - `events`: vector of `SpikeEvent` (copied into a `Vector{SpikeEvent}`)
@@ -103,3 +108,29 @@ function Base.show(io::IO, buffer::TemporalBuffer)
     n = length(buffer.events)
     print(io, "TemporalBuffer(window=", buffer.window, ", ", n, n == 1 ? " event)" : " events)")
 end
+
+# `==` uses Float32 `==` (±0.0 equal, NaNs not equal).
+# `isequal`/`hash` follow Julia float rules (±0.0 distinct, NaNs equal) for Set/Dict.
+Base.:(==)(a::SpikeEvent, b::SpikeEvent) =
+    a.neuron_id == b.neuron_id && a.t == b.t && a.value == b.value
+
+Base.isequal(a::SpikeEvent, b::SpikeEvent) =
+    a.neuron_id == b.neuron_id && isequal(a.t, b.t) && isequal(a.value, b.value)
+
+Base.hash(a::SpikeEvent, h::UInt) =
+    hash(a.value, hash(a.t, hash(a.neuron_id, h)))
+
+Base.:(==)(a::SpikeTrain, b::SpikeTrain) = a.events == b.events
+
+Base.isequal(a::SpikeTrain, b::SpikeTrain) = isequal(a.events, b.events)
+
+Base.hash(a::SpikeTrain, h::UInt) = hash(a.events, h)
+
+Base.:(==)(a::TemporalBuffer, b::TemporalBuffer) =
+    a.window == b.window && a.events == b.events
+
+Base.isequal(a::TemporalBuffer, b::TemporalBuffer) =
+    isequal(a.window, b.window) && isequal(a.events, b.events)
+
+Base.hash(a::TemporalBuffer, h::UInt) =
+    hash(a.events, hash(a.window, h))
