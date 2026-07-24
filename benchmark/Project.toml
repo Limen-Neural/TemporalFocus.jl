@@ -1,0 +1,8 @@
+[deps]
+BenchmarkTools = "6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf"
+Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
+TemporalFocus = "7f3c9f2a-6b2e-4d91-9c4f-1a2b3c4d5e6f"
+
+[compat]
+BenchmarkTools = "1"
+julia = "1.9"
